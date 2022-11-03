@@ -13,9 +13,9 @@ import redis from 'redis';
 import helpers from './commands/helpers.js';
 import pLb from './commands/pLb.js';
 import profile from './commands/profile.js';
+import vote from './commands/vote.js';
 
 import Console from "./Console.js"
-import vote from './commands/vote.js';
 new Console();
 
 const rc = redis.createClient({
@@ -65,7 +65,7 @@ const GROWTH_FACTOR = 0.8;
 const reminderOn = {};
 
 client.on('messageCreate', async msg => {
-    // if (msg.channel.id !== '1008657622691479636') return;
+    // if (msg.channel.id !== '1008657622691479636') return; uhhm
     if (msg.author.id === '770100332998295572') {
         let botMsg = msg.embeds[0];
         if (!botMsg || !botMsg.title) return;
@@ -290,7 +290,7 @@ client.on('messageCreate', async msg => {
 });
 
 client.on('interactionCreate', async interaction => {
-    // if (interaction.channel.id !== '1008657622691479636') return;
+    // if (interaction.channel.id !== '1008657622691479636') return; uhhm
     if (interaction.isCommand()) {
 
         const { commandName, options } = interaction;
@@ -323,7 +323,7 @@ client.on('interactionCreate', async interaction => {
         }
 
         if (commandName === 'help') {
-            help(interaction, MessageEmbed, MessageActionRow, MessageButton);
+            help(interaction, MessageEmbed);
         }
 
         if (commandName === 'profile') {
@@ -332,26 +332,7 @@ client.on('interactionCreate', async interaction => {
         }
 
         if (commandName === 'vote') {
-            vote(interaction, MessageEmbed, MessageActionRow, MessageButton);
-            const embed = new MessageEmbed()
-                .setTitle('Vote 🍜')
-                .setDescription('...*maybe leave a review too :)* \nAlso join the official server: *https://discord.gg/eEeaExspU8*')
-                .setFooter({ text: 'tyty' });
-            const upvote = new MessageActionRow()
-                .addComponents(
-                    new MessageButton()
-                        .setURL('https://top.gg/bot/1016043389994668073/vote')
-                        .setLabel('Top.gg')
-                        .setStyle('LINK'),
-                    new MessageButton()
-                        .setURL('https://discordbotlist.com/bots/ramen-3767/upvote')
-                        .setLabel('DBL')
-                        .setStyle('LINK')
-                );
-            helpers.reply(interaction, {
-                embeds: [embed],
-                components: [upvote],
-            });
+            vote(interaction, MessageEmbed, MessageActionRow, MessageButton, client);
         }
     }
 
