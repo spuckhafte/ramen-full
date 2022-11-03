@@ -1,6 +1,6 @@
 import helpers from "./helpers.js";
 
-export default async (interaction, MessageEmbed, MessageActionRow, MessageButton) => {
+export default async (interaction, MessageEmbed) => {
     const embed = new MessageEmbed()
         .setTitle('Ramen Guide 📙')
         .setDescription('Bot will start reminding you after your **first successful** mission or report!\n***Slash** commands only*.')
