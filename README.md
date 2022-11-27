@@ -14,3 +14,4 @@ Utility for **Naruto Botto**.
 5. Shows you the leaderboard for missions and reports.
 6. Plans your balance, just react to: *n balance*.
 7. A global and local (server-specific) leaderboard for missions and reports.
+ 
