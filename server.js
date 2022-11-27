@@ -404,4 +404,4 @@ for (let user of (await User.find({}))) {
         await remind(User, false, reminders[reminder], user.username, user.id, reminder, timeLeft, true, client);
     }
 }
-console.log('donedonadone');
+console.log('donedonadone'); 
