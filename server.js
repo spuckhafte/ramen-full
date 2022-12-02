@@ -16,6 +16,7 @@ import profile from './commands/profile.js';
 import vote from './commands/vote.js';
 
 import Console from "./Console.js"
+import here from './commands/here.js';
 new Console();
 
 const rc = redis.createClient({
@@ -65,7 +66,7 @@ const GROWTH_FACTOR = 0.8;
 const reminderOn = {};
 
 client.on('messageCreate', async msg => {
-    // if (msg.channel.id !== '1008657622691479636') return; uhhm
+    // if (msg.guild.id !== '1008657622691479633') return; uhhm
     if (msg.author.id === '770100332998295572') {
         let botMsg = msg.embeds[0];
         if (!botMsg || !botMsg.title) return;
@@ -170,7 +171,8 @@ client.on('messageCreate', async msg => {
                     if (nbMsg.content.startsWith(`**${msg.author.username}** defeated an enemy`)) {
                         storeReminder(msg.author.id, 'tower');
                         remind(User, nbMsg, nbMsg.createdTimestamp, msg.author.username, msg.author.id, 'tower', false, false, client);
-                        user.extras.xp = user.extras.xp + growth(user.extras.xp, xpInc.taskPassBenefit);
+                        let xp = user.extras.xp ? user.extras.xp : 0;
+                        user.extras.xp = xp + growth(xp, xpInc.taskPassBenefit);
                         user.save()
                     };
                 });
@@ -285,25 +287,41 @@ client.on('messageCreate', async msg => {
                 const task = dict[cmd.trim().split('-')[2]]
                 pLb.clearLb(msg, User, Details, task);
             };
+
+            if (cmd.trim() == 'update') {
+                const user = await User.findOne({ id: msg.author.id });
+                if (user.username != msg.author.username) {
+                    user.username = msg.author.username;
+                    await user.save();
+                }
+                msg.reply({
+                    content: '✅ **username updated!**',
+                    allowedMentions: {
+                        repliedUser: false
+                    }
+                });
+            };
         }
     }
 });
 
 client.on('interactionCreate', async interaction => {
-    // if (interaction.channel.id !== '1008657622691479636') return; uhhm
+    // if (interaction.guild.id !== '1008657622691479633') return; uhhm
     if (interaction.isCommand()) {
 
         const { commandName, options } = interaction;
 
         let user = await User.findOne({ id: interaction.user.id });
-        if (Date.now() - user.extras.lastCsv >= 1 * 60 * 1000 && Date.now() - user.extras.lastCsv < 10 * 60 * 1000) {
-            user.extras.xp = user.extras.xp + growth(user.extras.xp, xpInc.ramenCmdBenefit);
-            user.extras.lastCsv = Date.now();
-            user.save();
-        } else {
-            if (Date.now() - user.extras.lastCsv >= 10 * 60 * 1000) {
+        if (user) {
+            if (Date.now() - user.extras.lastCsv >= 1 * 60 * 1000 && Date.now() - user.extras.lastCsv < 10 * 60 * 1000) {
+                user.extras.xp = user.extras.xp + growth(user.extras.xp, xpInc.ramenCmdBenefit);
                 user.extras.lastCsv = Date.now();
                 user.save();
+            } else {
+                if (Date.now() - user.extras.lastCsv >= 10 * 60 * 1000) {
+                    user.extras.lastCsv = Date.now();
+                    user.save();
+                }
             }
         }
 
@@ -333,6 +351,10 @@ client.on('interactionCreate', async interaction => {
 
         if (commandName === 'vote') {
             vote(interaction, MessageEmbed, MessageActionRow, MessageButton, client);
+        }
+
+        if (commandName === 'here') {
+            here(interaction, User);
         }
     }
 
@@ -390,18 +412,18 @@ function reminderActive(id, task) {
     return reminderOn[id][task];
 }
 
-await client.login(Details.TOKEN)
+// await client.login(Details.TOKEN)
 
-for (let user of (await User.find({}))) {
-    let reminders = user.reminder;
-    for (let reminder of Object.keys(reminders)) {
-        if (!reminders[reminder]) continue;
-        const deltaTime = Date.now() - reminders[reminder];
-        if (deltaTime >= Timer[reminder]) continue;
+// for (let user of (await User.find({}))) {
+//     let reminders = user.reminder;
+//     for (let reminder of Object.keys(reminders)) {
+//         if (!reminders[reminder]) continue;
+//         const deltaTime = Date.now() - reminders[reminder];
+//         if (deltaTime >= Timer[reminder]) continue;
 
-        storeReminder(user.id, reminder);
-        const timeLeft = Timer[reminder] - deltaTime - 800;
-        await remind(User, false, reminders[reminder], user.username, user.id, reminder, timeLeft, true, client);
-    }
-}
-console.log('donedonadone'); 
+//         storeReminder(user.id, reminder);
+//         const timeLeft = Timer[reminder] - deltaTime - 800;
+//         await remind(User, false, reminders[reminder], user.username, user.id, reminder, timeLeft, true, client);
+//     }
+// }
+// console.log('donedonadone');
