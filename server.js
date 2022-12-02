@@ -412,18 +412,18 @@ function reminderActive(id, task) {
     return reminderOn[id][task];
 }
 
-// await client.login(Details.TOKEN)
+await client.login(Details.TOKEN)
 
-// for (let user of (await User.find({}))) {
-//     let reminders = user.reminder;
-//     for (let reminder of Object.keys(reminders)) {
-//         if (!reminders[reminder]) continue;
-//         const deltaTime = Date.now() - reminders[reminder];
-//         if (deltaTime >= Timer[reminder]) continue;
+for (let user of (await User.find({}))) {
+    let reminders = user.reminder;
+    for (let reminder of Object.keys(reminders)) {
+        if (!reminders[reminder]) continue;
+        const deltaTime = Date.now() - reminders[reminder];
+        if (deltaTime >= Timer[reminder]) continue;
 
-//         storeReminder(user.id, reminder);
-//         const timeLeft = Timer[reminder] - deltaTime - 800;
-//         await remind(User, false, reminders[reminder], user.username, user.id, reminder, timeLeft, true, client);
-//     }
-// }
-// console.log('donedonadone');
+        storeReminder(user.id, reminder);
+        const timeLeft = Timer[reminder] - deltaTime - 800;
+        await remind(User, false, reminders[reminder], user.username, user.id, reminder, timeLeft, true, client);
+    }
+}
+console.log('donedonadone');
