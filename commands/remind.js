@@ -74,7 +74,7 @@ export default async (User, botMsg, now, username, userid, type, _customTime, _f
 
         setTimeout(async () => {
             if (channel) {
-                await helpers.send(botMsg, `<@${userid}> your **${type}** is ready!`, channel);
+                if (type !== 'adventure') await helpers.send(botMsg, `<@${userid}> your **${type}** is ready!`, channel);
             }
         }, _customTime ? _customTime : Timer[type]);
 
@@ -118,10 +118,12 @@ export default async (User, botMsg, now, username, userid, type, _customTime, _f
 
             setTimeout(async () => {
                 if (channel) {
-                    if (botMsg && !custom) await helpers.send(botMsg, `<@${userid}> your **${type}** is ready!`);
+                    if (botMsg && !custom) {
+                        if (type !== 'adventure') await helpers.send(botMsg, `<@${userid}> your **${type}** is ready!`);
+                    }
                     else {
                         try {
-                            await channel.send(`<@${userid}> your **${type}** is ready!`);
+                            if (type !== 'adventure') await channel.send(`<@${userid}> your **${type}** is ready!`);
                         } catch (e) {
                             null;
                         }
