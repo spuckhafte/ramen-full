@@ -298,7 +298,7 @@ client.on('messageCreate', async msg => {
                 const startTime = (Date.now() - (Timer.quest - timeLeft)) + 1000;
                 storeReminder(msg.author.id, 'quest');
                 await remind(User, msg, startTime, msg.author.username, msg.author.id, 'quest', timeLeft + 1000, true, client);
-                await msg.channel.send({
+                await helpers.send(msg, {
                     content: `${msg.author} reminder added for **quest**`,
                     allowedMentions: {
                         users: []
@@ -348,7 +348,7 @@ client.on('messageCreate', async msg => {
                     user.username = msg.author.username;
                     await user.save();
                 }
-                msg.reply({
+                helpers.reply(msg, {
                     content: '✅ **username updated!**',
                     allowedMentions: {
                         repliedUser: false
