@@ -106,8 +106,10 @@ client.on('messageCreate', async msg => {
                         }
                     }
                 } else {
-                    let xp = user.extras.xp ? user.extras.xp : 0;
-                    user.extras.xp = xp + growth(xp, xpInc.taskFailBenefit);
+                    if (user && user.extras) {
+                        let xp = user.extras.xp ?? 0;
+                        user.extras.xp = xp + growth(xp, xpInc.taskFailBenefit);
+                    }
                 }
                 user.save();
             }, 20.5 * 1000);
@@ -135,8 +137,10 @@ client.on('messageCreate', async msg => {
                         }
                     }
                 } else {
-                    let xp = user.extras.xp ? user.extras.xp : 0;
-                    user.extras.xp = xp + growth(xp, xpInc.taskFailBenefit);
+                    if (user && user.extras) {
+                        let xp = user.extras.xp ?? 0;
+                        user.extras.xp = xp + growth(xp, xpInc.taskFailBenefit);
+                    }
                 }
                 user.save();
             }, 20.5 * 1000);
@@ -178,8 +182,10 @@ client.on('messageCreate', async msg => {
                     if (nbMsg.content.startsWith(`**${msg.author.username}** defeated an enemy`)) {
                         storeReminder(msg.author.id, 'tower');
                         remind(User, nbMsg, nbMsg.createdTimestamp, msg.author.username, msg.author.id, 'tower', false, false, client);
-                        let xp = user.extras.xp ? user.extras.xp : 0;
-                        user.extras.xp = xp + growth(xp, xpInc.taskPassBenefit);
+                        if (user && user.extras) {  
+                            let xp = user.extras.xp ? user.extras.xp : 0;
+                            user.extras.xp = xp + growth(xp, xpInc.taskPassBenefit);
+                        }
                         user.save()
                     };
                 });
@@ -368,12 +374,14 @@ client.on('interactionCreate', async interaction => {
         let user = await User.findOne({ id: interaction.user.id });
         if (user) {
             if (Date.now() - user.extras.lastCsv >= 1 * 60 * 1000 && Date.now() - user.extras.lastCsv < 10 * 60 * 1000) {
-                user.extras.xp = user.extras.xp + growth(user.extras.xp, xpInc.ramenCmdBenefit);
-                user.extras.lastCsv = Date.now();
-                user.save();
+                if (user && user.extras) {
+                    user.extras.xp = user.extras.xp + growth(user.extras.xp, xpInc.ramenCmdBenefit);
+                    user.extras.lastCsv = Date.now();
+                }
+                await user.save();
             } else {
                 if (Date.now() - user.extras.lastCsv >= 10 * 60 * 1000) {
-                    user.extras.lastCsv = Date.now();
+                    if (user && user.extras) user.extras.lastCsv = Date.now();
                     user.save();
                 }
             }
@@ -514,9 +522,6 @@ function mainServer(req, res) {
 httpServer.listen(PORT, () => {
     console.log(`listening on ${PORT}*`);
 });
-
-
-
 
 
 
