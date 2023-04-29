@@ -1,5 +1,6 @@
 async function send(msg, data, chnl) {
     if (!chnl) chnl = msg.channel;
+    if (!msg.guild) return;
     if (!msg.guild.me.permissionsIn(chnl).has('SEND_MESSAGES')) return;
     if (data.embeds && !msg.guild.me.permissionsIn(chnl).has('EMBED_LINKS')) {
         await chnl.send('`EMBED_LINKS` perm **missing**');
@@ -15,6 +16,7 @@ async function send(msg, data, chnl) {
 
 async function reply(msg, data) {
     let chnl = msg.channel;
+    if (!msg.guild) return;
     if (!msg.guild.me.permissionsIn(chnl).has('SEND_MESSAGES')) return;
     if (data.embeds && !msg.guild.me.permissionsIn(chnl).has('EMBED_LINKS')) {
         await chnl.send('`EMBED_LINKS` perm **missing**');
