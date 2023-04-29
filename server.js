@@ -89,11 +89,12 @@ client.on('messageCreate', async msg => {
         if (botMsg.title.includes('rank mission')) {
             if (!botMsg.footer.iconURL) return;
             const userId = botMsg.footer.iconURL.split('/avatars/')[1].split('/')[0];
-            const user = await User.findOne({ id: userId });
+            let user = await User.findOne({ id: userId });
             if (user && user.getPings === false) return;
-            storeReminder(userId, 'mission')
+            storeReminder(userId, 'mission');
             const username = botMsg.title.toLowerCase().replace(/'s ([a-z]+) rank mission/, '');
             setTimeout(async () => {
+                if (!user) return;
                 if (msg.embeds[0].footer.text.includes('Correct answer')) {
                     user.stats.missions = user.stats.missions ?? 0 + 1;
                     let xp = user.extras.xp ? user.extras.xp : 0;
@@ -125,6 +126,7 @@ client.on('messageCreate', async msg => {
             const username = botMsg.title.toLowerCase().replace('\'s report info', '');
 
             setTimeout(async () => {
+                if (!user) return;
                 if (msg.embeds[0].footer.text.includes('Successful')) {
                     user.stats.reports = user.stats.reports ?? 0 + 1;
                     let xp = user.extras.xp ? user.extras.xp : 0;
