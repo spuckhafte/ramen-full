@@ -1,8 +1,8 @@
 export default {
     TOKEN: "MTAxNjA0MzM4OTk5NDY2ODA3Mw.GWiaEg._PkcOBMsl3XxZNVdVO3MUIpZKpiX09X_84aMv8",
-    DB_URL: "mongodb+srv://shit-chat:hesoyam@cluster0.1at1u.mongodb.net/ramen?retryWrites=true&w=majority",
+    DB_URL: "",
     MOD_CHNLS: ["1017459544273715210"],
-    REDIS_URL: "redis://default:maL09tX2Ak5xkfaklQrtX9AiK60NBLL9@redis-15597.c212.ap-south-1-1.ec2.cloud.redislabs.com:15597",
+    REDIS_URL: "",
     IMP_SERVERS: {
         '1008657622691479633': {
             server: 'uhhm',
